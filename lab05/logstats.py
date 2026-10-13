@@ -13,3 +13,22 @@ def parse_event(line: str) -> dict:
     if level not in LEVELS:
         raise ValueError(f"Незнакомый уровень: {level!r}")
     return {"time": time, "level": level, "message": message}
+
+def count_levels(lines) -> dict:
+    """Считает, сколько строк каждого уровня.
+
+    Испорченные строки попадают под ключ BROKEN.
+    """
+    counts = {level: 0 for level in LEVELS}
+    counts["BROKEN"] = 0
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            event = parse_event(line)
+        except ValueError:
+            counts["BROKEN"] += 1
+        else:
+            counts[event["level"]] += 1
+    return counts
+
