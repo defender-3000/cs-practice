@@ -32,3 +32,24 @@ def count_levels(lines) -> dict:
             counts[event["level"]] += 1
     return counts
 
+def top_errors(lines, n: int) -> list[list]:
+    """n самых частых сообщений уровня ERROR.
+
+    Пары [сообщение, сколько раз]. При равенстве — по алфавиту.
+    """
+    error_counts = {}
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            event = parse_event(line)
+        except ValueError:
+            continue
+        if event["level"] == "ERROR":
+            msg = event["message"]
+            error_counts[msg] = error_counts.get(msg, 0) + 1
+
+    # сортировка: сначала по убыванию частоты, затем по алфавиту
+    sorted_errors = sorted(error_counts.items(), key=lambda item: (-item[1], item[0]))
+    return [[msg, cnt] for msg, cnt in sorted_errors[:n]]
+
