@@ -16,8 +16,8 @@ def main():
 
     total = sum(counts.values())
     print(total)
-    print(counts["ERROR"])
-    print(counts["BROKEN"])
+    print(counts.get("ERROR", 0))
+    print(counts.get("BROKEN", 0))
 
     report = format_report(counts, errors)
     with open("report.txt", "w", encoding="utf-8") as out:
