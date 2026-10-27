@@ -69,3 +69,15 @@ def parse_settings(lines: list[str]) -> dict:
 
     return result
 
+def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:
+    """Дополняет записи сведениями из справочника по значению ключа key.
+
+    Поля самой записи важнее: при совпадении ключей остаётся значение из записи.
+    """
+    merged = []
+    for row in rows:
+        row_key = row.get(key)
+        addition = extra.get(row_key, {}) if row_key is not None else {}
+        merged.append({**addition, **row})
+    return merged
+
