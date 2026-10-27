@@ -15,7 +15,7 @@ def csv_to_records(text: str) -> list[dict]:
     return records
 
 def parse_settings(lines: list[str]) -> dict:
-    """Простой YAML: «ключ: значение», списки через «- », комментарии после #."""
+
     result: dict = {}
     current_list_key: str | None = None
 
@@ -70,10 +70,7 @@ def parse_settings(lines: list[str]) -> dict:
     return result
 
 def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:
-    """Дополняет записи сведениями из справочника по значению ключа key.
 
-    Поля самой записи важнее: при совпадении ключей остаётся значение из записи.
-    """
     merged = []
     for row in rows:
         row_key = row.get(key)
@@ -81,3 +78,5 @@ def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:
         merged.append({**addition, **row})
     return merged
 
+def records_to_json(records: list[dict]) -> str:
+    return json.dumps(records, ensure_ascii=False, indent=2, sort_keys=True)
