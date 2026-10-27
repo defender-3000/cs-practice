@@ -1,7 +1,7 @@
 import json
 
 def csv_to_records(text: str) -> list[dict]:
-    
+
     if not text.strip():
         return []
     lines = text.splitlines()
@@ -14,10 +14,29 @@ def csv_to_records(text: str) -> list[dict]:
         records.append(dict(zip(header, values)))
     return records
 
+
 def parse_settings(lines: list[str]) -> dict:
 
     result: dict = {}
     current_list_key: str | None = None
+
+    def convert(value: str):
+        if value == "true" or value == "yes":
+            return True
+        if value == "false" or value == "no":
+            return False
+        try:
+            return int(value)
+        except ValueError:
+            pass
+        try:
+            return float(value)
+        except ValueError:
+            pass
+        try:
+            return float(value.replace(",", "."))
+        except ValueError:
+            return value
 
     for raw in lines:
         line = raw.split("#", 1)[0].rstrip()
@@ -29,19 +48,7 @@ def parse_settings(lines: list[str]) -> dict:
         if stripped.startswith("- "):
             item = stripped[2:].strip()
             if current_list_key is not None:
-                # приведение типа элемента списка
-                if item == "true" or item == "yes":
-                    result[current_list_key].append(True)
-                elif item == "false" or item == "no":
-                    result[current_list_key].append(False)
-                else:
-                    try:
-                        result[current_list_key].append(int(item))
-                    except ValueError:
-                        try:
-                            result[current_list_key].append(float(item))
-                        except ValueError:
-                            result[current_list_key].append(item)
+                result[current_list_key].append(convert(item))
             continue
 
         if ":" in stripped:
@@ -51,23 +58,12 @@ def parse_settings(lines: list[str]) -> dict:
             if value == "":
                 result[key] = []
                 current_list_key = key
-                continue
-            # приведение типа обычного значения
-            if value == "true" or value == "yes":
-                result[key] = True
-            elif value == "false" or value == "no":
-                result[key] = False
             else:
-                try:
-                    result[key] = int(value)
-                except ValueError:
-                    try:
-                        result[key] = float(value)
-                    except ValueError:
-                        result[key] = value
-            current_list_key = None
+                result[key] = convert(value)
+                current_list_key = None
 
     return result
+
 
 def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:
 
@@ -78,5 +74,7 @@ def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:
         merged.append({**addition, **row})
     return merged
 
+
 def records_to_json(records: list[dict]) -> str:
+
     return json.dumps(records, ensure_ascii=False, indent=2, sort_keys=True)
