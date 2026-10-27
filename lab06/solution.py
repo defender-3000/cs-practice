@@ -2,8 +2,10 @@ def count_by_extension(paths: list[str]) -> dict[str, int]:
     
     counts: dict[str, int] = {}
     for path in paths:
-        name = path.rsplit("/", 1)[-1]          # имя файла без каталогов
-        ext = name.rsplit(".", 1)[1].lower() if "." in name else ""
+        name = path.rsplit("/", 1)[-1]
+        base, dot, ext = name.rpartition(".")
+        # расширение есть, только если точка не первая в имени
+        ext = ext.lower() if dot and base else ""
         counts[ext] = counts.get(ext, 0) + 1
     return counts
 
