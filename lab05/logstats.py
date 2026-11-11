@@ -1,13 +1,7 @@
-"""Модуль для разбора и подсчёта статистики журнала сервиса."""
-
 LEVELS = {"DEBUG", "INFO", "WARNING", "ERROR"}
 
 
 def parse_event(line: str) -> dict:
-    """Разбирает строку журнала в словарь {"time", "level", "message"}.
-
-    Негодная строка (без уровня или с незнакомым уровнем) → ValueError.
-    """
     parts = line.strip().split(maxsplit=2)
     if len(parts) < 3:
         raise ValueError(f"Недостаточно частей в строке: {line!r}")
@@ -18,11 +12,6 @@ def parse_event(line: str) -> dict:
 
 
 def count_levels(lines) -> dict:
-    """Считает, сколько строк каждого уровня.
-
-    Испорченные строки попадают под ключ BROKEN.
-    Ключи с нулевым количеством не добавляются.
-    """
     counts = {}
     for line in lines:
         if not line.strip():
@@ -38,19 +27,11 @@ def count_levels(lines) -> dict:
 
 
 def _error_sort_key(item):
-    """Ключ сортировки для пар (сообщение, количество).
-
-    Сначала по убыванию количества, при равенстве — по алфавиту.
-    """
     message, count = item
     return (-count, message)
 
 
 def top_errors(lines, n: int) -> list[list]:
-    """n самых частых сообщений уровня ERROR.
-
-    Пары [сообщение, сколько раз]. При равенстве — по алфавиту.
-    """
     error_counts = {}
     for line in lines:
         if not line.strip():
@@ -68,7 +49,6 @@ def top_errors(lines, n: int) -> list[list]:
 
 
 def format_report(counts: dict, errors: list[list]) -> str:
-    """Формирует текст отчёта по готовым подсчётам."""
     lines = ["Отчёт по журналу", ""]
     for level in sorted(counts):
         lines.append(f"{level}: {counts[level]}")
