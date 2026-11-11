@@ -6,8 +6,6 @@ def main():
 
     with open(path, encoding="utf-8") as log:
         counts = count_levels(log)
-        
-    with open(path, encoding="utf-8") as log:
         errors = top_errors(log, 3)
 
     total = sum(counts.values())
