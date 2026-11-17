@@ -87,3 +87,13 @@ changed_matrix[1:4, 1:4] = 100
 
 print("changed_matrix:\n", changed_matrix)
 print("Исходная matrix:\n", matrix)
+
+#6
+print("\n--- Задание 6 ---")
+numbers = np.arange(12)
+table = numbers.reshape(3, 4)
+transposed = table.T
+
+print("Форма numbers:", numbers.shape)
+print("Форма table:", table.shape)
+print("Форма transposed:", transposed.shape)
