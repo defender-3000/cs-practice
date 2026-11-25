@@ -89,7 +89,6 @@ print("changed_matrix:\n", changed_matrix)
 print("Исходная matrix:\n", matrix)
 
 #6
-print("\n--- Задание 6 ---")
 numbers = np.arange(12)
 table = numbers.reshape(3, 4)
 transposed = table.T
