@@ -75,10 +75,11 @@ small_matrix[1:, 1:] = 9
 
 changed_hours = hours.copy()
 changed_hours[2:5] = 99
-changed_hours[1::2] = -1
+changed_hours[::2] = -1
 
 print("changed_hours:", changed_hours)
 print("Исходный hours:", hours)
+#без copy() поменлся бы изначальный hours
 
 changed_matrix = matrix.copy()
 changed_matrix[1, :] = 0
@@ -96,3 +97,5 @@ transposed = table.T
 print("Форма numbers:", numbers.shape)
 print("Форма table:", table.shape)
 print("Форма transposed:", transposed.shape)
+
+#Метод reshape только перегруппировывает существующие элементы, не добавляя и не удаляя их. Произведение новых размеров должно строго совпадать с общим числом элементов поэтому reshape(5,3) не работает
